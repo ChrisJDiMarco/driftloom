@@ -1,0 +1,26 @@
+{
+  "testedAt": "2026-08-11",
+  "package": "/Users/chrisdimarco/Cabinet/advisors/chief-of-staff/desk/Driftloom/dist/Driftloom-darwin-arm64/Driftloom.app",
+  "windowId": 11699,
+  "results": {
+    "clickCapturedCanvas": true,
+    "playingOnlyWhileCaptured": true,
+    "absoluteBoundaryLockRetained": true,
+    "relativeMovement": {
+      "events": 8,
+      "dx": 350,
+      "dy": 120,
+      "pointerLockErrors": 0
+    },
+    "escapeReleased": true,
+    "pauseMenuVisibleAfterRelease": true,
+    "clickRecaptured": true,
+    "finalState": "paused"
+  },
+  "screenshots": [
+    "final-pointer-captured.png",
+    "final-pointer-relative-look.png",
+    "final-pointer-released.png",
+    "final-pointer-recaptured.png"
+  ]
+}

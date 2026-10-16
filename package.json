@@ -1,0 +1,20 @@
+{
+  "name": "driftloom",
+  "version": "0.2.1",
+  "private": true,
+  "description": "An original floating-island voxel survival game with building, lumen networks, enemies, and power-ups.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check world.mjs && node --check gameplay.mjs && node --check renderer.mjs && node scripts/gameplay-smoke.mjs",
+    "qa": "electron . --qa-smoke",
+    "package:mac": "electron-packager . 'Driftloom' --platform=darwin --arch=arm64 --out=dist --overwrite --prune=true --ignore='^/dist($|/)' --ignore='^/verification($|/)' && codesign --force --deep --sign - 'dist/Driftloom-darwin-arm64/Driftloom.app' && codesign --verify --deep --strict 'dist/Driftloom-darwin-arm64/Driftloom.app'"
+  },
+  "dependencies": {
+    "three": "0.179.1"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.2.1",
+    "electron": "37.10.3"
+  }
+}

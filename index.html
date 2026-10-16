@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'" />
+    <title>Driftloom</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./node_modules/three/build/three.module.js",
+          "three/addons/": "./node_modules/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="world" aria-label="Playable three-dimensional floating island world"></canvas>
+      <div class="atmosphere" aria-hidden="true"></div>
+      <div class="drag-region" aria-hidden="true"></div>
+
+      <header class="brand glass">
+        <div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div>
+          <span class="eyebrow">ARCHIPELAGO 01 · CREATIVE SURVEY</span>
+          <h1>DRIFTLOOM</h1>
+          <p>Shape the islands. Wake the light.</p>
+        </div>
+      </header>
+
+      <section class="objective glass" aria-label="Current objective">
+        <span class="objective-number">01</span>
+        <div>
+          <span class="eyebrow">FIRST WEAVE</span>
+          <strong id="objective-text">Bridge the two lumen pylons with conduit</strong>
+        </div>
+        <div class="signal" id="signal" aria-label="Lumen network status"><i></i><i></i><i></i></div>
+      </section>
+
+      <aside class="telemetry glass" aria-label="World telemetry">
+        <div><span>SKY</span><strong id="clock">05:42</strong></div>
+        <div><span>POSITION</span><strong id="coordinates">0 · 0 · 0</strong></div>
+        <div><span>WORLD</span><strong id="block-count">— CELLS</strong></div>
+        <div class="capture-line"><span id="mouse-dot"></span><strong id="mouse-status">MOUSE FREE</strong></div>
+        <div class="save-line"><span id="save-dot"></span><strong id="save-status">NEW SURVEY</strong></div>
+      </aside>
+
+      <aside class="survival-hud glass" id="survivalHud" aria-label="Survival status">
+        <div class="survival-heading">
+          <span class="eyebrow">LUMEN SIEGE</span>
+          <strong><span id="combatWave">DORMANT</span><i aria-hidden="true">·</i><span id="combatRemaining">0 HOSTILES</span></strong>
+        </div>
+        <div class="vital-row health-vital">
+          <span>VITALITY</span>
+          <div class="meter-track" role="progressbar" aria-label="Vitality" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="healthFill"></i></div>
+          <output id="healthValue" aria-label="Vitality value">100</output>
+        </div>
+        <div class="vital-row shield-vital">
+          <span>WARD</span>
+          <div class="meter-track" role="progressbar" aria-label="Ward" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="shieldFill"></i></div>
+          <output id="shieldValue" aria-label="Ward value">0</output>
+        </div>
+        <div class="vital-row lumen-vital">
+          <span>LUMEN</span>
+          <div class="meter-track segmented" role="progressbar" aria-label="Lumen charge" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="lumenFill"></i></div>
+          <output id="lumenValue" aria-label="Lumen charge value">0</output>
+        </div>
+        <div class="combat-ledger" aria-label="Combat record">
+          <span>SCORE <strong id="combatScore">000000</strong></span>
+          <span>KILLS <strong id="combatKills">00</strong></span>
+        </div>
+        <div class="buff-list" id="buffList" aria-label="Active power-ups" aria-live="polite">
+          <span class="buff-empty">NO ACTIVE BOONS</span>
+        </div>
+        <div class="pulse-hint" id="pulseHint"><kbd>Q</kbd><span>Pulse unavailable · connect both pylons</span></div>
+      </aside>
+
+      <div class="reticle" id="reticle" aria-hidden="true"><i></i></div>
+      <div class="target-label glass" id="target-label">DRIFTSTONE</div>
+
+      <section class="enemy-readout glass" id="enemyReadout" aria-label="Targeted hostile" aria-live="polite" aria-hidden="true">
+        <div><span>HOSTILE LOCK</span><strong id="enemyName">UNKNOWN</strong></div>
+        <div class="enemy-health-track"><i id="enemyHealthFill"></i></div>
+      </section>
+
+      <div class="damage-flash" id="damageFlash" aria-hidden="true"></div>
+      <div class="hit-marker" id="hitMarker" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+      <aside class="controls glass" aria-label="Controls">
+        <span><kbd>WASD</kbd> roam</span>
+        <span><kbd>SPACE</kbd> rise</span>
+        <span><kbd>⇧</kbd> sprint</span>
+        <span><i class="mouse left"></i> strike / mine</span>
+        <span><i class="mouse right"></i> place</span>
+        <span><kbd>Q</kbd> pulse</span>
+        <span><kbd>ESC</kbd> pause</span>
+      </aside>
+
+      <section class="hotbar-wrap" aria-label="Material hotbar">
+        <div class="selected-material glass"><span>HELD MATERIAL</span><strong id="selected-name">Cloud moss</strong></div>
+        <div class="hotbar glass" id="hotbar"></div>
+      </section>
+
+      <div class="toast glass" id="toast" role="status"></div>
+
+      <section class="gateway visible" id="gateway" aria-label="Game menu">
+        <div class="gateway-card glass">
+          <div class="gateway-orbit" aria-hidden="true"><i></i><i></i><b></b></div>
+          <span class="eyebrow" id="menu-kicker">A PLAYABLE VOXEL SURVIVAL EXPERIMENT</span>
+          <h2 id="menu-title">The islands remember<br />what you connect.</h2>
+          <p id="menu-copy">Mine, build, and connect the two lumen pylons. Once the bridge wakes, the dark answers: survive the siege, collect fallen boons, and spend your charge on a radial pulse. Press Escape to release the mouse.</p>
+          <button class="enter-button" id="enter-world"><span>CAPTURE MOUSE &amp; PLAY</span><i>↗</i></button>
+          <div class="menu-actions">
+            <button id="save-world">Save world</button>
+            <button id="load-world">Load save</button>
+            <button id="snapshot">Take image</button>
+            <button class="danger" id="reset-world">Reset</button>
+          </div>
+          <div class="menu-footer"><span>DRIFTLOOM-01</span><span>LOCAL WORLD · OFFLINE</span></div>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./renderer.mjs"></script>
+  </body>
+</html>
